@@ -23,7 +23,7 @@ public class BoardServiceImpl implements BoardService {
     public List<BoardResponse> findAll() {
         List<Board> findBoards = boardRepository.findAllByOrderByCreateDate();
         return findBoards.stream()
-                .map(b-> BoardResponse.of(b))
+                .map(BoardResponse::of)
                 .collect(Collectors.toList());
     }
 
@@ -48,7 +48,6 @@ public class BoardServiceImpl implements BoardService {
     public BoardResponse update(Long id, BoardRequest boardRequest) {
         Board board = boardRepository.findById(id).orElseThrow(BoardNotFoundException::new);
         board.update(boardRequest.getTitle(), boardRequest.getContents());
-        boardRepository.flush();
 
         return BoardResponse.of(board);
     }
@@ -56,7 +55,7 @@ public class BoardServiceImpl implements BoardService {
     @Override
     @Transactional
     public Long delete(Long id) {
-        Board board = boardRepository.findById(id).orElseThrow(()->new BoardNotFoundException());
+        Board board = boardRepository.findById(id).orElseThrow(BoardNotFoundException::new);
         Long boardId = board.getId();
         boardRepository.delete(board);
 
