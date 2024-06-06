@@ -41,4 +41,14 @@ public class BoardController {
                 .build();
     }
 
+    @GetMapping("{id}")
+    public ApiResponse<Object> getBoardById(@PathVariable Long id) {
+        BoardResponse findBoard = boardService.findById(id);
+
+        return ApiResponse.builder()
+                .status(HttpStatus.OK)
+                .data(findBoard)
+                .message(SUCCESS.getMessage())
+                .build();
+    }
 }
