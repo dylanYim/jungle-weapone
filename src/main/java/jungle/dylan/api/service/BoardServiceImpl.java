@@ -47,7 +47,10 @@ public class BoardServiceImpl implements BoardService {
     @Transactional
     public BoardResponse update(Long id, BoardRequest boardRequest) {
         Board board = boardRepository.findById(id).orElseThrow(BoardNotFoundException::new);
-        board.update(boardRequest.getTitle(), boardRequest.getContents());
+        if(!board.getPassword().equals(boardRequest.getPassword())){
+            throw new IllegalStateException("Invalid Password");
+        }
+            board.update(boardRequest.getTitle(), boardRequest.getContents());
 
         return BoardResponse.of(board);
     }
