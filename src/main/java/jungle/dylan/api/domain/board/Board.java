@@ -24,5 +24,9 @@ public class Board {
     String contents;
     String password;
     LocalDateTime createDate;
-    LocalDateTime updateDate;
+
+    public void update(String title, String contents) {
+        this.title = title;
+        this.contents = contents;
+    }
 }
