@@ -51,4 +51,25 @@ public class BoardController {
                 .message(SUCCESS.getMessage())
                 .build();
     }
+
+    @PutMapping("{id}")
+    public ApiResponse<Object> updateBoard(@PathVariable Long id, @RequestBody BoardRequest boardRequest) {
+        BoardResponse updateBoard = boardService.update(id, boardRequest);
+
+        return ApiResponse.builder()
+                .status(HttpStatus.OK)
+                .data(updateBoard)
+                .message(String.format(UPDATE_SUCCESS.getMessage(), updateBoard.getId()))
+                .build();
+    }
+
+    @DeleteMapping("{id}")
+    public ApiResponse<Object> deleteBoard(@PathVariable Long id) {
+        Long deleteBoardId = boardService.delete(id);
+
+        return ApiResponse.builder()
+                .status(HttpStatus.OK)
+                .message(String.format(DELETE_SUCCESS.getMessage(), deleteBoardId))
+                .build();
+    }
 }
