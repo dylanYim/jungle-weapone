@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 @Builder
 public class BoardResponse {
     Long id;
-    String userName;
+    String username;
     String title;
     String contents;
     LocalDateTime createDate;
@@ -18,7 +18,7 @@ public class BoardResponse {
     public static BoardResponse of(Board board) {
         return BoardResponse.builder()
                 .id(board.getId())
-                .userName(board.getUserName())
+                .username(board.getUsername())
                 .title(board.getTitle())
                 .contents(board.getContents())
                 .createDate(board.getCreateDate())

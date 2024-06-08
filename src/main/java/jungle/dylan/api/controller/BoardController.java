@@ -1,6 +1,5 @@
 package jungle.dylan.api.controller;
 
-import jungle.dylan.api.constant.BoardResponseMessage;
 import jungle.dylan.api.dto.BoardRequest;
 import jungle.dylan.api.dto.BoardResponse;
 import jungle.dylan.api.dto.common.ApiResponse;

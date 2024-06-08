@@ -1,10 +1,11 @@
-package jungle.dylan.api.service;
+package jungle.dylan.api.service.impl;
 
 import jungle.dylan.api.domain.board.Board;
 import jungle.dylan.api.dto.BoardRequest;
 import jungle.dylan.api.dto.BoardResponse;
 import jungle.dylan.api.exception.BoardNotFoundException;
 import jungle.dylan.api.repository.BoardRepository;
+import jungle.dylan.api.service.BoardService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
