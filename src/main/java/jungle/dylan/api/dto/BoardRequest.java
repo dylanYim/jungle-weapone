@@ -10,14 +10,14 @@ import java.time.LocalDateTime;
 @Builder
 public class BoardRequest {
 
-    String userName;
+    String username;
     String title;
     String contents;
     String password;
 
     public Board toEntity() {
         return Board.builder()
-                .userName(userName)
+                .username(username)
                 .password(password)
                 .title(title)
                 .contents(contents)
