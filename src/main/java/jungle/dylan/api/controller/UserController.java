@@ -1,7 +1,6 @@
 package jungle.dylan.api.controller;
 
 import jakarta.validation.Valid;
-import jungle.dylan.api.constant.UserResponseMessage;
 import jungle.dylan.api.dto.UserRequest;
 import jungle.dylan.api.dto.common.ApiResponse;
 import jungle.dylan.api.service.UserService;
