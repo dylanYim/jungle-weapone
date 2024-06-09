@@ -20,6 +20,8 @@ public class User {
     @Column(unique = true)
     String username;
     String password;
+    @Enumerated(EnumType.STRING)
+    Role role;
     LocalDateTime createDate;
 
 }
