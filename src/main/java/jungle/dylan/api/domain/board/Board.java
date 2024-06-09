@@ -29,6 +29,7 @@ public class Board {
     private LocalDateTime createDate;
 
     public void update(String writer, String title, String contents) {
+        this.writer = writer;
         this.title = title;
         this.contents = contents;
     }
