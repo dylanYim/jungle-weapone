@@ -34,11 +34,16 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody UserRequest userRequest) {
+    public ResponseEntity<ApiResponse> login(@RequestBody UserRequest userRequest) {
         String token = userService.login(userRequest);
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization", token);
 
-        return new ResponseEntity<String>(LOGIN_SUCCESS.getMessage(), headers, HttpStatus.OK);
+        ApiResponse<Object> resp = ApiResponse.builder()
+                .status(HttpStatus.OK)
+                .message(LOGIN_SUCCESS.getMessage())
+                .build();
+
+        return new ResponseEntity<>(resp, headers, HttpStatus.OK);
     }
 }
