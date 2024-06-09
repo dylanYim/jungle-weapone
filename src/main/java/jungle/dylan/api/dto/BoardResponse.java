@@ -1,5 +1,6 @@
 package jungle.dylan.api.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jungle.dylan.api.domain.board.Board;
 import lombok.Builder;
 import lombok.Getter;
@@ -10,15 +11,16 @@ import java.time.LocalDateTime;
 @Builder
 public class BoardResponse {
     Long id;
-    String username;
+    String writer;
     String title;
     String contents;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     LocalDateTime createDate;
 
     public static BoardResponse of(Board board) {
         return BoardResponse.builder()
                 .id(board.getId())
-                .username(board.getUsername())
+                .writer(board.getWriter())
                 .title(board.getTitle())
                 .contents(board.getContents())
                 .createDate(board.getCreateDate())
