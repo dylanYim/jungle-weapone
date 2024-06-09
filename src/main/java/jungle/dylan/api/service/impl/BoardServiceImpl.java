@@ -51,7 +51,7 @@ public class BoardServiceImpl implements BoardService {
         if(!board.getPassword().equals(boardRequest.getPassword())){
             throw new IllegalStateException("Invalid Password");
         }
-            board.update(boardRequest.getTitle(), boardRequest.getContents());
+            board.update(boardRequest.getWriter(), boardRequest.getTitle(), boardRequest.getContents());
 
         return BoardResponse.of(board);
     }
