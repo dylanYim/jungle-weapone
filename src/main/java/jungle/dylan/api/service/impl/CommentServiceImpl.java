@@ -31,8 +31,8 @@ public class CommentServiceImpl implements CommentService {
 
 
     @Override
-    public CommentResponse write(CommentWriteRequest commentWriteRequest) {
-        Board board = boardRepository.findById(commentWriteRequest.getBoardId())
+    public CommentResponse write(Long boardId, CommentWriteRequest commentWriteRequest) {
+        Board board = boardRepository.findById(boardId)
                 .orElseThrow(BoardNotFoundException::new);
         User currentUser = getCurrentUser();
 
