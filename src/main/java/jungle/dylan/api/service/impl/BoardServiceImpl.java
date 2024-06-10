@@ -5,8 +5,7 @@ import jungle.dylan.api.domain.user.Role;
 import jungle.dylan.api.domain.user.User;
 import jungle.dylan.api.dto.BoardRequest;
 import jungle.dylan.api.dto.BoardResponse;
-import jungle.dylan.api.exception.BoardNotFoundException;
-import jungle.dylan.api.exception.UserNotFoundException;
+import jungle.dylan.api.error.exception.ApiException;
 import jungle.dylan.api.repository.BoardRepository;
 import jungle.dylan.api.repository.UserRepository;
 import jungle.dylan.api.service.BoardService;
@@ -19,6 +18,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static jungle.dylan.api.error.errorcode.BoardErrorCode.BOARD_NOT_FOUND;
+import static jungle.dylan.api.error.errorcode.UserErrorCode.*;
 
 @Service
 @Transactional(readOnly = true)
@@ -48,7 +50,8 @@ public class BoardServiceImpl implements BoardService {
 
     @Override
     public BoardResponse findById(Long id) {
-        Board board = boardRepository.findById(id).orElseThrow(BoardNotFoundException::new);
+        Board board = boardRepository.findById(id)
+                .orElseThrow(() -> new ApiException(BOARD_NOT_FOUND));
 
         return BoardResponse.of(board);
     }
@@ -56,10 +59,11 @@ public class BoardServiceImpl implements BoardService {
     @Override
     @Transactional
     public BoardResponse update(Long id, BoardRequest boardRequest) {
-        Board board = boardRepository.findById(id).orElseThrow(BoardNotFoundException::new);
+        Board board = boardRepository.findById(id)
+                .orElseThrow(() -> new ApiException(BOARD_NOT_FOUND));
         User currentUser = getCurrentUser();
         if(currentUser.getRole().equals(Role.USER) && !currentUser.equals(board.getUser())){
-            throw new IllegalStateException("Invalid Password");
+            throw new ApiException(UNAUTHORIZED_MODIFY);
         }
             board.update(boardRequest.getTitle(), boardRequest.getContents());
 
@@ -69,10 +73,12 @@ public class BoardServiceImpl implements BoardService {
     @Override
     @Transactional
     public Long delete(Long id) {
-        Board board = boardRepository.findById(id).orElseThrow(BoardNotFoundException::new);
+        Board board = boardRepository.findById(id)
+                .orElseThrow(() -> new ApiException(BOARD_NOT_FOUND));
         User currentUser = getCurrentUser();
+
         if(currentUser.getRole().equals(Role.USER) && !currentUser.equals(board.getUser())){
-            throw new IllegalStateException("Invalid Password");
+            throw new ApiException(UNAUTHORIZED_DELETE);
         }
         Long boardId = board.getId();
         boardRepository.delete(board);
@@ -88,8 +94,7 @@ public class BoardServiceImpl implements BoardService {
             UserDetails principal = (UserDetails) authentication.getPrincipal();
             System.out.println(principal.getUsername());
             currentUser = userRepository.findUserByUsername(principal.getUsername())
-                    .orElseThrow(UserNotFoundException::new);
-
+                    .orElseThrow(()-> new ApiException(USER_NOT_FOUND));
         }
 
         return currentUser;

@@ -5,6 +5,9 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jungle.dylan.api.config.SecurityConfig;
+import jungle.dylan.api.error.errorcode.AuthErrorCode;
+import jungle.dylan.api.error.exception.ApiException;
 import jungle.dylan.api.service.impl.CustomUserDetailsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -15,6 +18,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.Arrays;
+
+import static jungle.dylan.api.error.errorcode.AuthErrorCode.TOKEN_NOT_FOUND;
 
 @Component
 @RequiredArgsConstructor
@@ -35,6 +41,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
             SecurityContextHolder.getContext().setAuthentication(authentication);
+        } else if (token == null && !isAllowedRequest(request)) {
+            throw new ApiException(TOKEN_NOT_FOUND);
         }
 
         filterChain.doFilter(request, response);
@@ -46,5 +54,21 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             return bearerToken.substring(7);
         }
         return null;
+    }
+
+    private String normalizeUri(String uri) {
+        if (uri.endsWith("/**")) {
+            return uri.substring(0, uri.length() - 3);
+        }
+        return uri;
+    }
+
+    private boolean isAllowedRequest(HttpServletRequest request) {
+        String uri = request.getRequestURI();
+        boolean result = Arrays.stream(SecurityConfig.PERMIT_URI_ARRAY)
+                .map(this::normalizeUri)
+                .anyMatch(uri::startsWith);
+
+        return result;
     }
 }
