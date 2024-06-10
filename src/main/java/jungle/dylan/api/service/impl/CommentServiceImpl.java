@@ -2,6 +2,7 @@ package jungle.dylan.api.service.impl;
 
 import jungle.dylan.api.domain.board.Board;
 import jungle.dylan.api.domain.comment.Comment;
+import jungle.dylan.api.domain.user.Role;
 import jungle.dylan.api.domain.user.User;
 import jungle.dylan.api.dto.CommentUpdateRequest;
 import jungle.dylan.api.dto.CommentWriteRequest;
@@ -50,7 +51,7 @@ public class CommentServiceImpl implements CommentService {
                 .orElseThrow(CommentNotFoundException::new);
 
         User currentUser = getCurrentUser();
-        if (!currentUser.equals(findComment.getUser())) {
+        if (currentUser.getRole().equals(Role.USER) && !currentUser.equals(findComment.getUser())) {
             throw new RuntimeException("권한없음"); // 수정 필요
         }
 
@@ -65,7 +66,7 @@ public class CommentServiceImpl implements CommentService {
         Long deletedId = findComment.getId();
         User currentUser = getCurrentUser();
 
-        if (!currentUser.equals(findComment.getUser())) {
+        if (currentUser.getRole().equals(Role.USER) && !currentUser.equals(findComment.getUser())) {
             throw new RuntimeException("권한없음"); // 수정 필요
         }
 
