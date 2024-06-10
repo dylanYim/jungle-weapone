@@ -7,7 +7,6 @@ import lombok.Builder;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -16,7 +15,7 @@ import java.util.stream.Collectors;
 @Builder
 public class BoardResponse {
     Long id;
-    String writer;
+    String username;
     String title;
     String contents;
     List<CommentResponse> comments;
@@ -34,7 +33,7 @@ public class BoardResponse {
 
         return BoardResponse.builder()
                 .id(board.getId())
-                .writer(board.getWriter())
+                .username(board.getUser().getUsername())
                 .title(board.getTitle())
                 .contents(board.getContents())
                 .createDate(board.getCreateDate())

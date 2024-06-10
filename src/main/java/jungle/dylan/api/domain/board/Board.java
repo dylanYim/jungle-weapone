@@ -22,7 +22,6 @@ public class Board {
     @GeneratedValue
     @Column(name = "board_id")
     private Long id;
-    private String writer;
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "user_id")
     private User user;
@@ -30,11 +29,9 @@ public class Board {
     private String contents;
     @OneToMany(mappedBy = "board",cascade = CascadeType.ALL)
     private List<Comment> comments = new ArrayList<>();
-    private String password;
     private LocalDateTime createDate;
 
-    public void update(String writer, String title, String contents) {
-        this.writer = writer;
+    public void update(String title, String contents) {
         this.title = title;
         this.contents = contents;
     }
