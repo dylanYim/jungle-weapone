@@ -16,12 +16,12 @@ public class User {
     @Id
     @GeneratedValue
     @Column(name = "user_id")
-    Long id;
+    private Long id;
     @Column(unique = true)
-    String username;
-    String password;
+    private String username;
+    private String password;
     @Enumerated(EnumType.STRING)
-    Role role;
-    LocalDateTime createDate;
+    private Role role = Role.USER;
+    private LocalDateTime createDate;
 
 }
