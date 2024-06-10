@@ -1,6 +1,7 @@
 package jungle.dylan.api.dto;
 
 import jungle.dylan.api.domain.board.Board;
+import jungle.dylan.api.domain.user.User;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -10,15 +11,12 @@ import java.time.LocalDateTime;
 @Builder
 public class BoardRequest {
 
-    String writer;
     String title;
     String contents;
-    String password;
 
-    public Board toEntity() {
+    public Board toEntity(User user) {
         return Board.builder()
-                .writer(writer)
-                .password(password)
+                .user(user)
                 .title(title)
                 .contents(contents)
                 .createDate(LocalDateTime.now())

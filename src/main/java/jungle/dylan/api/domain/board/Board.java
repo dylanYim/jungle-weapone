@@ -1,10 +1,13 @@
 package jungle.dylan.api.domain.board;
 
 import jakarta.persistence.*;
+import jungle.dylan.api.domain.comment.Comment;
 import jungle.dylan.api.domain.user.User;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import static jakarta.persistence.FetchType.LAZY;
 
@@ -19,17 +22,16 @@ public class Board {
     @GeneratedValue
     @Column(name = "board_id")
     private Long id;
-    private String writer;
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "user_id")
     private User user;
     private String title;
     private String contents;
-    private String password;
+    @OneToMany(mappedBy = "board",cascade = CascadeType.ALL)
+    private List<Comment> comments = new ArrayList<>();
     private LocalDateTime createDate;
 
-    public void update(String writer, String title, String contents) {
-        this.writer = writer;
+    public void update(String title, String contents) {
         this.title = title;
         this.contents = contents;
     }
