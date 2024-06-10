@@ -1,7 +1,7 @@
 package jungle.dylan.api.config;
 
 import jungle.dylan.api.auth.JwtAuthenticationFilter;
-import jungle.dylan.api.service.impl.CustomUserDetailsService;
+import jungle.dylan.api.config.filter.SecurityExceptionHandlerFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -22,8 +22,16 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 public class SecurityConfig {
 
-    private final CustomUserDetailsService customUserDetailsService;
+    private final SecurityExceptionHandlerFilter securityExceptionHandlerFilter;
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
+
+    public static final String[] PERMIT_URI_ARRAY = {
+            "/api/v1/user/join",
+            "/api/v1/user/login",
+            "/swagger-ui.html",
+            "/swagger-ui/**",
+            "/v3/api-docs/**",
+    };
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception{
@@ -39,7 +47,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/api/v1/user/join", "/api/v1/user/login","/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
+                        .requestMatchers(PERMIT_URI_ARRAY).permitAll()
                         .anyRequest()
                         .authenticated()
                 )
@@ -47,7 +55,8 @@ public class SecurityConfig {
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 );
 
-        http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(securityExceptionHandlerFilter, JwtAuthenticationFilter.class);
 
         return http.build();
     }
